@@ -1,0 +1,380 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Address API Spec",
+        "description": "Address API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api/contacts"
+        }
+    ],
+    "paths": {
+        "/{contactId}/addresses": {
+            "get": {
+                "summary": "List Addresses API",
+                "description": "Get list addresses",
+                "parameters": [
+                    {
+                        "name": "contactId",
+                        "in": "path",
+                        "description": "ID of the contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List Addresses",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Get list addresses successfully"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "oneOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/DataResponse"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "summary": "Create address API",
+                "description": "Create new address",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/FormAddress"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contact created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Address created successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DataResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Validation error!"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/{contactId}/addresses/{id}": {
+            "get": {
+                "summary": "Get address  API",
+                "description": "Get address API",
+                "parameters": [
+                    {
+                        "name": "contactId",
+                        "in": "path",
+                        "description": "ID of the contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the address to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get address API",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DataResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Address not found"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "summary": "Update address API",
+                "description": "Update address API",
+                "parameters": [
+                    {
+                        "name": "contactId",
+                        "in": "path",
+                        "description": "ID of the contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the address to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/FormAddress"
+                },
+                "responses": {
+                    "200": {
+                        "description": "Address updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Address updated successfully"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DataResponse"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error!",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete address API",
+                "description": "Delete address API",
+                "parameters": [
+                    {
+                        "name": "contactId",
+                        "in": "path",
+                        "description": "ID of the contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the address to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contact deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deleted contact successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Contact not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Enter token"
+            }
+        },
+        "requestBodies": {
+            "FormAddress": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "street": {
+                                    "$ref": "#/components/schemas/StreetProperty"
+                                },
+                                "city": {
+                                    "$ref": "#/components/schemas/CityProperty"
+                                },
+                                "province": {
+                                    "$ref": "#/components/schemas/ProvinceProperty"
+                                },
+                                "country": {
+                                    "$ref": "#/components/schemas/CountryProperty"
+                                },
+                                "postal_code": {
+                                    "$ref": "#/components/schemas/PostalCodeProperty"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "StreetProperty": {
+                "type": "string",
+                "maxLength": 100,
+                "example": "Jalan"
+            },
+            "CityProperty": {
+                "type": "string",
+                "maxLength": 100,
+                "example": "Kota"
+            },
+            "ProvinceProperty": {
+                "type": "string",
+                "maxLength": 100,
+                "example": "Provinsi"
+            },
+            "CountryProperty": {
+                "type": "string",
+                "maxLength": 100,
+                "example": "Negara"
+            },
+            "PostalCodeProperty": {
+                "type": "number",
+                "maxLength": 5,
+                "example": "12345"
+            },
+            "DataResponse": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "street": {
+                        "$ref": "#/components/schemas/StreetProperty"
+                    },
+                    "city": {
+                        "$ref": "#/components/schemas/CityProperty"
+                    },
+                    "province": {
+                        "$ref": "#/components/schemas/ProvinceProperty"
+                    },
+                    "postal_code": {
+                        "$ref": "#/components/schemas/PostalCodeProperty"
+                    }
+                }
+            },
+            "ValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "errors": {
+                        "type": "string",
+                        "example": "Maximum city is 100 characters"
+                    }
+                }
+            },
+            "UnauthorizedResponse": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "example": "Unauthorized"
+                    }
+                }
+            },
+            "NotFoundResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Contact not found"
+                    },
+                    "errors": {
+                        "type": "object"
+                    }
+                }
+            }
+        }
+    }
+}

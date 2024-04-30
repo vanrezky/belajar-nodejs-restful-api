@@ -1,0 +1,413 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Users API Spec",
+        "description": "Users API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api/users"
+        }
+    ],
+    "paths": {
+        "/": {
+            "post": {
+                "summary": "Register user API",
+                "description": "Register new user",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserRegistration"
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRegisterResponse"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Validation Error"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "Login user API",
+                "description": "Login user",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserLogin"
+                },
+                "responses": {
+                    "201": {
+                        "description": "Login success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserLoginSuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Login failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserLoginFailedResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "get": {
+                "summary": "Get user profile API",
+                "description": "Get user profile",
+                "responses": {
+                    "200": {
+                        "description": "Get user profile",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserProfileResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "summary": "Update user profile API",
+                "description": "Update user profile",
+                "requestBody": {
+                    "$ref": "#/components/requestBodies/UserUpdate"
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProfileUpdateSuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "405": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/logout": {
+            "delete": {
+                "summary": "Logout user API",
+                "description": "Logout user",
+                "responses": {
+                    "200": {
+                        "description": "Logout success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserLogoutSuccessResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization"
+            }
+        },
+        "requestBodies": {
+            "UserRegistration": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserRegistrationSchema"
+                        }
+                    }
+                }
+            },
+            "UserLogin": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserLoginSchema"
+                        }
+                    }
+                }
+            },
+            "UserUpdate": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UserUpdateSchema"
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "UserRegistrationSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "$ref": "#/components/schemas/NameProperty"
+                    },
+                    "username": {
+                        "$ref": "#/components/schemas/UsernameProperty"
+                    },
+                    "password": {
+                        "$ref": "#/components/schemas/PasswordProperty"
+                    },
+                    "confirm_password": {
+                        "$ref": "#/components/schemas/ConfirmPasswordProperty"
+                    }
+                }
+            },
+            "UserLoginSchema": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "$ref": "#/components/schemas/UsernameProperty"
+                    },
+                    "password": {
+                        "$ref": "#/components/schemas/PasswordProperty"
+                    }
+                }
+            },
+            "UserUpdateSchema": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "$ref": "#/components/schemas/NameProperty"
+                    },
+                    "password": {
+                        "$ref": "#/components/schemas/PasswordProperty"
+                    },
+                    "confirm_password": {
+                        "$ref": "#/components/schemas/ConfirmPasswordProperty"
+                    }
+                }
+            },
+            "NameProperty": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 20,
+                "example": "John Doe"
+            },
+            "UsernameProperty": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 15,
+                "example": "johndoe123"
+            },
+            "PasswordProperty": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 20,
+                "example": "rahasia"
+            },
+            "ConfirmPasswordProperty": {
+                "type": "string",
+                "minLength": 5,
+                "maxLength": 20,
+                "example": "rahasia"
+            },
+            "UserRegisterResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "User created successfully"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "$ref": "#/components/schemas/NameProperty"
+                            },
+                            "username": {
+                                "$ref": "#/components/schemas/UsernameProperty"
+                            }
+                        }
+                    }
+                }
+            },
+            "UserRegisterFailedResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Validation Errror!"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "username": "Username allready exists"
+                        }
+                    }
+                }
+            },
+            "UserLoginSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Login success"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "token": {
+                                "type": "string",
+                                "example": "token-key"
+                            }
+                        }
+                    }
+                }
+            },
+            "UserLoginFailedResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Username or Password wrong"
+                    },
+                    "errors": {
+                        "type": "object"
+                    }
+                }
+            },
+            "UserProfileResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "User profile"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "$ref": "#/components/schemas/NameProperty"
+                            },
+                            "username": {
+                                "$ref": "#/components/schemas/UsernameProperty"
+                            }
+                        }
+                    }
+                }
+            },
+            "ProfileUpdateSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "User updated"
+                    },
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "$ref": "#/components/schemas/NameProperty"
+                            },
+                            "username": {
+                                "$ref": "#/components/schemas/UsernameProperty"
+                            }
+                        }
+                    }
+                }
+            },
+            "UnauthorizedResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthorized"
+                    }
+                }
+            },
+
+            "ValidationErrorResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Validation error"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "first_name": "Maximum first name is 100 characters"
+                        }
+                    }
+                }
+            },
+            "ProfileUpdateFailedResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Validation Error!"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "name": "Minimum name is 5 and maximum is 20 characters"
+                        }
+                    }
+                }
+            },
+            "UserLogoutSuccessResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Logout success"
+                    }
+                }
+            }
+        }
+    }
+}
