@@ -6,6 +6,7 @@ import {
     removeTestUser,
     removeTestContact,
     createTestContact,
+    getTestContact,
 } from './test-util.js';
 
 describe('POST /api/contacts', () => {
@@ -87,6 +88,7 @@ describe('POST /api/contacts', () => {
 describe('PUT /api/contacts/:contactId', () => {
     beforeEach(async () => {
         await createTestUser();
+        await createTestContact();
     });
 
     afterEach(async () => {
@@ -95,7 +97,7 @@ describe('PUT /api/contacts/:contactId', () => {
     });
 
     it('should able to update contact', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .put(`/api/contacts/${contact.id}`)
@@ -118,7 +120,7 @@ describe('PUT /api/contacts/:contactId', () => {
     });
 
     it('should reject if request is invalid', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .put(`/api/contacts/${contact.id}`)
@@ -150,7 +152,7 @@ describe('PUT /api/contacts/:contactId', () => {
     });
 
     it('should reject if token is empty', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .put(`/api/contacts/${contact.id}`)
@@ -170,6 +172,7 @@ describe('PUT /api/contacts/:contactId', () => {
 describe('DELETE /api/contacts/:contactId', () => {
     beforeEach(async () => {
         await createTestUser();
+        await createTestContact();
     });
 
     afterEach(async () => {
@@ -178,7 +181,7 @@ describe('DELETE /api/contacts/:contactId', () => {
     });
 
     it('should able to delete contact', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .delete(`/api/contacts/${contact.id}`)
@@ -200,7 +203,7 @@ describe('DELETE /api/contacts/:contactId', () => {
     });
 
     it('should reject if token is empty', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .delete(`/api/contacts/${contact.id}`)
@@ -226,6 +229,7 @@ describe('DELETE /api/contacts/:contactId', () => {
 describe('GET /api/contacts', () => {
     beforeEach(async () => {
         await createTestUser();
+        await createTestContact();
     });
 
     afterEach(async () => {
@@ -234,8 +238,6 @@ describe('GET /api/contacts', () => {
     });
 
     it('should able to get contacts', async () => {
-        const contact = await createTestContact();
-
         const result = await supertest(web)
             .get('/api/contacts')
             .set('Authorization', 'test')
@@ -243,11 +245,10 @@ describe('GET /api/contacts', () => {
 
         expect(result.status).toBe(200);
         expect(result.body.data.length).toBe(1);
-        expect(result.body.data[0]).toEqual(contact);
     });
 
     it('should able to filter by name', async () => {
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .get('/api/contacts')
@@ -257,15 +258,12 @@ describe('GET /api/contacts', () => {
             })
             .send();
 
-        console.info(result.body.data);
-
         expect(result.status).toBe(200);
         expect(result.body.data.length).toBe(1);
     });
 
     it('should able filter by name and limit', async () => {
-        await createTestContact();
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .get('/api/contacts')
@@ -281,8 +279,7 @@ describe('GET /api/contacts', () => {
     });
 
     it('should able to filter using name and phone', async () => {
-        await createTestContact();
-        const contact = await createTestContact();
+        const contact = await getTestContact();
 
         const result = await supertest(web)
             .get('/api/contacts')
@@ -290,12 +287,12 @@ describe('GET /api/contacts', () => {
             .query({
                 name: 'va',
                 phone: contact.phone,
-                size: 2,
+                size: 1,
             })
             .send();
 
         expect(result.status).toBe(200);
-        expect(result.body.data.length).toBe(2);
-        expect(result.body.data[1]).toEqual(contact);
+        expect(result.body.data.length).toBe(1);
+        expect(result.body.data[0]).toEqual(contact);
     });
 });

@@ -10,9 +10,6 @@ const get = async (params, user_id) => {
     const size = params.size ? parseInt(params.size) : 10;
     const phone = params.phone;
 
-    console.info('size ' + size);
-    console.info('name ' + name);
-
     let whereCondition = {
         user_id: user_id,
     };
@@ -43,8 +40,6 @@ const get = async (params, user_id) => {
             },
         });
     }
-
-    console.info('whereCondition ' + JSON.stringify(whereCondition));
 
     return prismaClient.contact.findMany({
         where: whereCondition,
