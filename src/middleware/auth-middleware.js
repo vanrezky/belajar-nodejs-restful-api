@@ -1,5 +1,5 @@
-import { prismaClient } from '../application/database';
-import { MESSAGES } from '../const/message';
+import { prismaClient } from '../application/database.js';
+import { MESSAGES } from '../const/message.js';
 
 export const authMiddleware = async (req, res, next) => {
     const token = req.get('Authorization');

@@ -1,8 +1,8 @@
-import { prismaClient } from '../application/database';
-import { ResponseError } from '../error/response-error';
-import { validate } from '../validation/validation';
-import { addressCreateValidation } from '../validation/address-validation';
-import { MESSAGES } from '../const/message';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
+import { validate } from '../validation/validation.js';
+import { addressCreateValidation } from '../validation/address-validation.js';
+import { MESSAGES } from '../const/message.js';
 
 const get = async (contact_id, user_id) => {
     if (await checkContact(contact_id, user_id)) {
